@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <style>
 html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:Arial,sans-serif;color:#fff}
-#slides{position:absolute;inset:0}
-.slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.5s ease}
+#slides{position:absolute;top:0;left:0;right:0;bottom:0}
+.slide{position:absolute;top:0;left:0;right:0;bottom:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.5s ease}
 .slide.on{opacity:1}
-#shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65),rgba(0,0,0,0) 45%);z-index:5}
-#tipbox{position:absolute;right:40px;bottom:50px;width:440px;padding:18px 22px;background:rgba(0,0,0,.55);border-left:4px solid #3aa0ff;z-index:10;transition:opacity .5s}
+#shade{position:absolute;top:0;left:0;right:0;bottom:0;background:linear-gradient(to top,rgba(0,0,0,.65),rgba(0,0,0,0) 45%);z-index:5}
+#tipbox{position:absolute;right:40px;bottom:130px;width:440px;padding:18px 22px;background:rgba(0,0,0,.55);border-left:4px solid #3aa0ff;z-index:10;transition:opacity .5s}
 #tiplabel{font-size:13px;letter-spacing:2px;color:#3aa0ff;margin-bottom:8px}
 #tiptext{font-size:19px;line-height:1.35}
 #mapname{position:absolute;left:40px;bottom:50px;font-size:30px;font-weight:bold;z-index:10;text-shadow:0 2px 8px #000}
@@ -21,23 +21,17 @@ html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:Arial
 <div id="shade"></div>
 <div id="mapname"></div>
 <div id="tipbox">
-<div id="tiplabel">НАДПИСЬ</div>
+<div id="tiplabel">СОВЕТ</div>
 <div id="tiptext"></div>
 </div>
 <div id="barwrap"><div id="bar"></div></div>
 <script>
-var defaultImages=["img/1.jpg","img/2.jpg","img/3.jpg","img/4.jpg","img/5.jpg","img/6.jpg","img/7.jpg","img/8.jpg","img/9.jpg","img/10.jpg"];
+var images=["img/1.jpg","img/2.jpg","img/3.jpg","img/4.jpg","img/5.jpg","img/6.jpg","img/7.jpg","img/8.jpg","img/9.jpg","img/10.jpg"];
 var tips=[
-  "Когда нибудь карта загрузится...",
-  "Россия. Путин. Победа.",
-  "Это кто нибудь читает?",
-  "Я кстати сдал ОГЭ по русскому на 4",
-  "67",
-  "Я существую. Пока.",
-  "Пиши, если что",
-  "Если ты это читаешь - ты умеешь читать.",
-  "Не ешь желтый снег",
-  "Тигры похожи на котов"
+  "Нажми C, чтобы открыть меню создания.",
+  "Держи пробел, чтобы прыгать бхопом.",
+  "Нажми Q, чтобы открыть меню предметов.",
+  "Можно менять скорость в настройках аддона."
 ];
 var slideInterval=6000;
 var tipInterval=5000;
@@ -47,15 +41,10 @@ var tipText=document.getElementById("tiptext");
 var bar=document.getElementById("bar");
 var slides=[];
 var current=-1;
-var slideTimer=null;
 var tipIndex=0;
 var total=0;
 
 function buildSlides(list){
-  if(slideTimer){clearInterval(slideTimer)}
-  container.innerHTML="";
-  slides=[];
-  current=-1;
   for(var i=0;i<list.length;i++){
     var d=document.createElement("div");
     d.className="slide";
@@ -64,17 +53,17 @@ function buildSlides(list){
     slides.push(d);
   }
   showSlide(0);
-  if(slides.length>1){slideTimer=setInterval(nextSlide,slideInterval)}
+  if(slides.length>1){setInterval(nextSlide,slideInterval)}
 }
 
 function showSlide(i){
   var next=slides[i];
   var prev=slides[current];
   next.style.zIndex=2;
-  next.classList.add("on");
+  next.className="slide on";
   if(prev){
     prev.style.zIndex=1;
-    setTimeout(function(){prev.classList.remove("on")},1700);
+    setTimeout(function(){prev.className="slide"},1700);
   }
   current=i;
 }
@@ -95,6 +84,7 @@ function showTip(){
 function GameDetails(servername,serverurl,mapname,maxplayers,steamid,gamemode){
   document.getElementById("mapname").textContent=mapname;
 }
+
 function SetFilesTotal(t){
   total=t;
 }
@@ -106,7 +96,7 @@ function SetFilesNeeded(n){
 function SetStatusChanged(status){
 }
 
-buildSlides(defaultImages);
+buildSlides(images);
 showTip();
 setInterval(showTip,tipInterval);
 </script>
