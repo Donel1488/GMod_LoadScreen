@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<style>
+html,body{margin:0;height:100%;background:#000;overflow:hidden;font-family:Arial,sans-serif;color:#fff}
+#slides{position:absolute;inset:0}
+.slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transition:opacity 1.5s ease}
+.slide.on{opacity:1}
+#shade{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.65),rgba(0,0,0,0) 45%);z-index:5}
+#tipbox{position:absolute;right:40px;bottom:50px;width:440px;padding:18px 22px;background:rgba(0,0,0,.55);border-left:4px solid #3aa0ff;z-index:10;transition:opacity .5s}
+#tiplabel{font-size:13px;letter-spacing:2px;color:#3aa0ff;margin-bottom:8px}
+#tiptext{font-size:19px;line-height:1.35}
+#mapname{position:absolute;left:40px;bottom:50px;font-size:30px;font-weight:bold;z-index:10;text-shadow:0 2px 8px #000}
+#barwrap{position:absolute;left:0;right:0;bottom:0;height:5px;background:rgba(255,255,255,.15);z-index:10}
+#bar{height:100%;width:0;background:#3aa0ff;transition:width .4s ease}
+</style>
+</head>
+<body>
+<div id="slides"></div>
+<div id="shade"></div>
+<div id="mapname"></div>
+<div id="tipbox">
+<div id="tiplabel">НАДПИСЬ</div>
+<div id="tiptext"></div>
+</div>
+<div id="barwrap"><div id="bar"></div></div>
+<script>
+var defaultImages=["img/1.jpg","img/2.jpg","img/3.jpg","img/4.jpg","img/5.jpg","img/6.jpg","img/7.jpg","img/8.jpg","img/9.jpg","img/10.jpg"];
+var tips=[
+  "Когда нибудь карта загрузится...",
+  "Россия. Путин. Победа.",
+  "Это кто нибудь читает?",
+  "Я кстати сдал ОГЭ по русскому на 4",
+  "67",
+  "Я существую. Пока.",
+  "Пиши, если что",
+  "Если ты это читаешь - ты умеешь читать.",
+  "Не ешь желтый снег",
+  "Тигры похожи на котов"
+];
+var slideInterval=6000;
+var tipInterval=5000;
+var container=document.getElementById("slides");
+var tipBox=document.getElementById("tipbox");
+var tipText=document.getElementById("tiptext");
+var bar=document.getElementById("bar");
+var slides=[];
+var current=-1;
+var slideTimer=null;
+var tipIndex=0;
+var total=0;
+
+function buildSlides(list){
+  if(slideTimer){clearInterval(slideTimer)}
+  container.innerHTML="";
+  slides=[];
+  current=-1;
+  for(var i=0;i<list.length;i++){
+    var d=document.createElement("div");
+    d.className="slide";
+    d.style.backgroundImage="url("+list[i]+")";
+    container.appendChild(d);
+    slides.push(d);
+  }
+  showSlide(0);
+  if(slides.length>1){slideTimer=setInterval(nextSlide,slideInterval)}
+}
+
+function showSlide(i){
+  var next=slides[i];
+  var prev=slides[current];
+  next.style.zIndex=2;
+  next.classList.add("on");
+  if(prev){
+    prev.style.zIndex=1;
+    setTimeout(function(){prev.classList.remove("on")},1700);
+  }
+  current=i;
+}
+
+function nextSlide(){
+  showSlide((current+1)%slides.length);
+}
+
+function showTip(){
+  tipBox.style.opacity=0;
+  setTimeout(function(){
+    tipText.textContent=tips[tipIndex];
+    tipIndex=(tipIndex+1)%tips.length;
+    tipBox.style.opacity=1;
+  },500);
+}
+
+function GameDetails(servername,serverurl,mapname,maxplayers,steamid,gamemode){
+  document.getElementById("mapname").textContent=mapname;
+}
+function SetFilesTotal(t){
+  total=t;
+}
+
+function SetFilesNeeded(n){
+  if(total>0){bar.style.width=((total-n)/total*100)+"%"}
+}
+
+function SetStatusChanged(status){
+}
+
+buildSlides(defaultImages);
+showTip();
+setInterval(showTip,tipInterval);
+</script>
+</body>
+</html>
